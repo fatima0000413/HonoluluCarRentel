@@ -2,64 +2,12 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 public class Main {
-    private static final String CAR_FILE = "Car.txt";
+    //private static final String CAR_FILE = "Car.txt";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
         Scanner scan = new Scanner(System.in);
-        //CompanyRenter.menu();
-        while (true) {
-            System.out.println("\nMenu:");
-            System.out.println("1. Create Car");
-            System.out.println("2. Create Customer");
-            System.out.println("3. Create Rental");
-            System.out.println("4. Change Car Information");
-            System.out.println("5. Change Customer Information");
-            System.out.println("6. Show Cars");
-            System.out.println("7. Show Customers");
-            System.out.println("8. Show Rentals");
-            System.out.println("9. Exit");
-
-            System.out.print("Enter your choice: ");
-            int choice = scan.nextInt();
-            scan.nextLine();
-
-            switch (choice) {
-                case 1:
-                    createCar();
-                    break;
-                case 2:
-                    createRenter();
-                    break;
-                case 3:
-
-                    break;
-                case 4:
-                    changeCarInfo();
-                    break;
-                case 5:
-                    //ShowCars();
-
-                    break;
-                case 6:
-                    //ShowRenter():
-
-                    break;
-                case 7:
-
-                    break;
-                case 8:
-
-                    break;
-                case 9:
-                    System.out.println("Exiting...");
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
-
-        }
+        menu.hovedMenu(scan);
     }
-
     public static Renter createRenter() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choose renter type:");
@@ -82,7 +30,8 @@ public class Main {
 
     public static PrivateRenter createPrivateRenter() {
         Scanner scan = new Scanner(System.in);
-        List<String> customerInfo = new ArrayList<>();
+        ArrayList<String> customerInfo=new ArrayList<>();
+        //List<String> customerInfo = new ArrayList<>();
 
         System.out.println("Enter renter name:");
         String name = scan.nextLine();
@@ -122,8 +71,8 @@ public class Main {
 
     public static CompanyRenter createCompanyRenter() {
         Scanner scan = new Scanner(System.in);
-        List<String> companyInfo = new ArrayList<>();
-
+        //List<String> companyInfo = new ArrayList<>();
+        ArrayList<String> companyInfo=new ArrayList<>();
         System.out.println("Enter renter name:");
         String name = scan.nextLine();
         companyInfo.add(name);
@@ -169,10 +118,10 @@ public class Main {
         return new CompanyRenter(name, address, postNumber, city, phoneNumber, email, companyName, companyAddress, companyPhoneNumber, CRN);
     }
 
-    public static void createCar() {
+    public static void createCar() throws IOException{
         Scanner scan = new Scanner(System.in);
-        List<String> carInfo = new ArrayList<>();
-
+        //List<String> carInfo = new ArrayList<>();
+        ArrayList<String> carInfo =new ArrayList<>();
         System.out.println("Enter registration number:");
         String registrationNumber = scan.next();
         scan.nextLine();
@@ -198,12 +147,19 @@ public class Main {
         scan.nextLine();
         carInfo.add(Integer.toString(odometerReading));
 
-        saveToFile(carInfo, CAR_FILE);
+        saveToFile(carInfo, "Car.txt");
 
         System.out.println("Car information saved successfully.");
     }
 
-    public static void saveToFile(List<String> list, String CAR_FILE) {
+    public static void saveToFile(List<String> list, String CAR_FILE) throws IOException {
+        PrintWriter writer = new PrintWriter(new FileWriter(CAR_FILE, true));
+            for (String line : list) {
+                writer.println(line + " ");
+            }
+    }
+
+    /*public static void saveToFile(List<String> list, String CAR_FILE) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CAR_FILE, true))) {
             for (String line : list) {
                 writer.println(line + " ");
@@ -211,9 +167,9 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Error saving data to file: ");
         }
-    }
+    }*/
 
-    public static void changeCarInfo() {
+    public static void changeCarInfo() throws IOException{
         Scanner scan = new Scanner(System.in);
         List<String> carInfo = new ArrayList<>();
 
@@ -242,16 +198,14 @@ public class Main {
         scan.nextLine();
         carInfo.add(Integer.toString(odometerReading));
 
-
-
         // skriver det nye infor ind i filne
         writeNewInfo(carInfo);
         System.out.println("Car information updated successfully.");
     }
 
-    public static void writeNewInfo(List<String> carInfo) {
+    public static void writeNewInfo(List<String> carInfo) throws IOException{
         //henter fra info fra  fil
-        List<String> existingCarInfo = readFromFile(CAR_FILE);
+        List<String> existingCarInfo = readFromFile("Car.txt");
         //søger efter regi nummer og erstatter info
 
         for (int i = 0; i < existingCarInfo.size(); i++) {
@@ -263,10 +217,19 @@ public class Main {
         }
 
         // skriver opdateret infor tilbage til fil
-        saveToFile(existingCarInfo, CAR_FILE);
+        saveToFile(existingCarInfo, "Car.txt");
     }
 
-    public static List<String> readFromFile(String CAR_FILE) {
+    public static List<String> readFromFile(String CAR_FILE) throws  IOException{
+        List<String> lines = new ArrayList<>();
+        Scanner scanner = new Scanner(new File(CAR_FILE));
+        while (scanner.hasNextLine()) {
+            lines.add(scanner.nextLine());
+        }
+        return lines;
+    }
+
+    /*public static List<String> readFromFile(String CAR_FILE) {
         List<String> lines = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(CAR_FILE))) {
             while (scanner.hasNextLine()) {
@@ -276,7 +239,7 @@ public class Main {
             System.err.println("File not found: ");
         }
         return lines;
-    }
+    }*/
 }
 
 
